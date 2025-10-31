@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  garena-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8100:8100"
+    environment:
+      - GARENA_USERNAME=${GARENA_USERNAME}
+      - GARENA_PASSWORD=${GARENA_PASSWORD}
+      - GARENA_AUTH=${GARENA_AUTH}
+    env_file:
+      - .env
+    # volumes:
+      # Mount for development (optional - uncomment for dev mode)
+      # - ./:/app
+      # - /app/__pycache__
+    restart: unless-stopped
+    networks:
+      - garena-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/account"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  garena-network:
+    driver: bridge
