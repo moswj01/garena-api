@@ -46,7 +46,7 @@ auth_key = os.getenv("GARENA_AUTH")
 
 print(username, password, auth_key)
 
-api = Termgame(username, password, auth_key, '_ga_1M7M9L6VPX=GS2.1.s1757040020$o18$g0$t1757040020$j60$l0$h0; _gid=GA1.2.1706402335.1757335196; _ga_KE3SY7MRSD=GS2.1.s1757335195$o1$g1$t1757335204$j51$l0$h0; _ga_RF9R6YT614=GS2.1.s1757335195$o1$g0$t1757335204$j51$l0$h0; _ga=GA1.1.1129761749.1749566646; token_session=e96cd88a6711237ffd6fcb065e13f06986b40fc0021795541b60bd25f96ddfe247b84b3d128a675d5f911a5b30bf7937; fb_state=28c995fa3c2a41f3b19e4e3d44711c60; google_state=24a8b7cbb672433e8c14aac1930f8b46; huawei_state=4066916e204740389fe2957f04c786f3; line_state=ed097738de554c62a7bff1a35b99deaa; twitter_state=ce3895c38f044303a5a09c924b274e31; vk_state=b673194c72cd42bdaef8256c4cc0b02c; _ga_XB5PSHEQB4=GS2.1.s1757385599$o21$g0$t1757385599$j60$l0$h0; datadome=f~KK9KbnYsaM0dQKfriXcB7p9Ad807seLmqiR2u1Lb7Y~3NcLTnIWgj~9NtCHFpj_~gGFsnU6se7yDMOtEL768mLIFUffRop5yhsqJyE7SnWv1DuidPeCUk1EV3ncPqf')
+api = Termgame(username, password, auth_key, '_ga=GA1.1.1693857112.1761887450; _ga_1M7M9L6VPX=GS2.1.s1761887449$o1$g1$t1761887487$j22$l0$h0; token_session=05c2ebb6ccac4a0b6e4e855e5b96fa9a8413f143a129764c58e8b530ab2ac5a908be7fa6734c77020da3bc14c941d722; fb_state=906e1e8089584c3e9e51d0587f2423dd; google_state=1aea2d007dde4ba7b9202d3517649229; huawei_state=5105e6ff29fe4220b1480a96c98c51b6; line_state=fb15ec3223994483a765b1cb560649c0; twitter_state=26f40cd9100a486caebaaab5502263b3; vk_state=e54eae5ac7c84b76aadc21be8d55b4a7; _ga_XB5PSHEQB4=GS2.1.s1762276856$o4$g1$t1762276998$j60$l0$h0; datadome=AzQu0AtLaTapOKcpQg~HVsp7DS3q~z~DkYJtAGpTmBmyYIzLEXaYdhP2rGl3htQfQs4e0wZJt25_DQZsyDLL8dq52hmemuOn4cT38p4lcSy80CoOc8swS13TZVOZjihw')
 api.login_garena()
 
 

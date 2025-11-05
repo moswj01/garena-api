@@ -9,6 +9,11 @@ from base64 import b64encode
 import base64
 import json
 
+try:
+    from proxy_config import PROXY_CONFIG
+except ImportError:
+    PROXY_CONFIG = None
+
 class Termgame:
     TERMGAME_ENDPOINT = "https://termgame.com"
     SSO_GARENA_ENDPOINT = "https://sso.garena.com"
@@ -36,7 +41,6 @@ class Termgame:
         self.datadome = self.initial_datadome()
         self.access_token = None
         self.garena_id = None
-        self.player_id_login_cookies = 'source=pc; region=IN.TH; mspid2=02f8849803c509c8e792813e7271a6ef; language=th; _fbp=fb.1.1757340696850.641426515527115040; _ga=GA1.1.1903506881.1757340697; datadome=1FWIfm61mCz1yDqqLxnY1R5GHtfepBUSSQYH5iqr76301Y55yGa1xT3s6qzZUwvXiSQuHaUNzWnv0UyNUc1VJqkkb2L7HRCOPmTUTQ0o54eb2hdz7RpN6DB2dN79Kkcu; session_key=qzybn0lh67vexi7dn0hs34d1ynclgw7t; _ga_VRZ5RWC6GM=GS2.1.s1757340697$o1$g1$t1757340719$j38$l0$h0'
         self.prelogin_cookies = prelogin_cookies
         self.get_packages_session_key = 'h6p47vato27p2xd5zftf3he71wgbro66'
         self.session_key = None
@@ -178,13 +182,18 @@ class Termgame:
         self.session_key = response.headers.get('Set-Cookie').split(";")[0].split("=")[1]
         return response.json()
 
-    def get_user_info(self):
+    def get_user_info(self, custom_session_key: str = None):
+
+        use_session_key = self.session_key
+        if custom_session_key:
+            use_session_key = custom_session_key
+
         headers = {
             'accept': 'application/json',
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-US,en;q=0.9,th;q=0.8',
             'content-type': 'application/json',
-            'cookie': 'source=pc; session_key={}; datadome={}'.format(self.session_key, self.datadome),
+            'cookie': 'source=pc; session_key={}; datadome={}'.format(use_session_key, self.datadome),
             'x-datadome-clientid': self.datadome,
         }
 
@@ -202,7 +211,7 @@ class Termgame:
         return response.headers
 
     def get_roles(self, app_id: int, session_key: str = None):
-        url = "https://termgame.com/api/shop/apps/roles?app_id=100151&region=IN.TH&language=th&source=pc"
+        url = "https://termgame.com/api/shop/apps/roles?app_id={}&region=IN.TH&language=th&source=pc'".format(app_id)
 
         payload = {}
         headers = {
@@ -275,6 +284,10 @@ class Termgame:
             "login_id": player_id,
         })
 
+        # get_datadome
+        datadome = self.get_datadome()['cookie'].split(";")[0].split("=")[1]
+        print('datadome', datadome)
+
         headers = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'en-US,en;q=0.9,th;q=0.8',
@@ -282,8 +295,12 @@ class Termgame:
             'Connection': 'keep-alive',
             'Content-Type': 'application/json',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
-            'Cookie': self.player_id_login_cookies,
+            'Cookie': 'region=IN.TH; source=pc; language=th; datadome={}'.format(datadome),
         }
+
+        # Set up proxy configuration if not provided
+        if proxies is None:
+            proxies = PROXY_CONFIG
 
         response = requests.post(url, headers=headers, data=payload, proxies=proxies)
         if 'error' in response.json():
@@ -318,22 +335,6 @@ class Termgame:
             "session_key": session_key,
             "data": response.json()
         }
-
-    # def get_user_info(self, session_key: str):
-    #     headers = {
-    #         'accept': 'application/json',
-    #         'accept-encoding': 'gzip, deflate, br',
-    #         'accept-language': 'en-US,en;q=0.9,th;q=0.8',
-    #         'content-type': 'application/json',
-    #         'cookie': 'session_key={}'.format(session_key),
-    #         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
-    #     }
-
-    #     response = requests.get(self.TERMGAME_ENDPOINT + "/api/auth/get_user_info/multi", headers=headers)
-    #     return response.json()
-
-    def set_player_id_login_cookies(self, cookies: str):
-        self.player_id_login_cookies = cookies
 
     def set_prelogin_cookies(self, cookies: str):
         self.prelogin_cookies = cookies
